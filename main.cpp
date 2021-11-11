@@ -1,7 +1,8 @@
 // clang++ -std=c++20 main.cpp -o program.out -lglfw -framework OpenGL -Wno-deprecated-declarations
-
 #include <GLFW/glfw3.h>
 #include <OpenGL/glu.h>
+
+#include <iostream>
 
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
@@ -11,8 +12,6 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #endif
-
-#include <random>
 
 #include "simulation.hpp"
 
@@ -37,12 +36,10 @@ void sphere(const std::pair<double, double>& center, double radius) {
     glEnd();
 }
 
-void loop(GLFWwindow* window, std::pair<int, int>& dimensions) {
-    sim::angles_st st{{1.0, 1.0}, {0, 0}};  // theta
+void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValues& initial) {
+    sim::state st{{initial.theta1, initial.theta2}, {0, 0}};  // theta
 
-    double length = dimensions.first / 2.5f;
-
-    sim::sphere_ss ss{{0.5, 0.5}, {length, length}};
+    sim::system ss{{initial.mass1, initial.mass2}, {initial.length1, initial.length2}};
 
     glLineWidth(4);
 
@@ -67,6 +64,12 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions) {
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) ss.length.second += 5;
         if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) ss.length.second -= 5;
 
+        if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) ss.mass.first += 0.1;
+        if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) ss.mass.first -= 0.1;
+
+        if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) ss.mass.second += 0.1;
+        if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) ss.mass.second -= 0.1;
+
         sphere({0, 0}, 0.03);
 
         sphere({first_line.first / dimensions.first, -first_line.second / dimensions.second}, 0.03);
@@ -81,10 +84,11 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions) {
 }
 
 int main() {
+    sim::initialValues initial;
     std::pair<int, int> dimensions{1000, 1000};
 
     glfwInit();
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     glfwWindowHint(GLFW_SAMPLES, 4);
     auto window = glfwCreateWindow(dimensions.first / 2, dimensions.second / 2, "Podwojne wachadlo", nullptr, nullptr);
     glfwMakeContextCurrent(window);
@@ -93,7 +97,15 @@ int main() {
     glViewport(0, 0, dimensions.first, dimensions.second);
     glClearColor(0.2, 0.2, 0.2, 0);
 
-    loop(window, dimensions);
+    std::cout << "Press [1] to increase length1\nPress [2] to decrease length1\nPress [3] to increase length2\nPress [4] to decrease length2\nPress"
+                 "[5] to increase mass1\nPress [6] to decrease mass1\nPress [7] to increase mass2\nPress [8] to decrease mass2\n";
+    std::cout << "Enter [angle1] [angle2] [length1] [length2] [mass1] [mass2]\n";
+    std::cin >> initial.theta1 >> initial.theta2 >> initial.length1 >> initial.length2 >> initial.mass1 >> initial.mass2;
+
+    if (initial.length1 > 5 && initial.length2 > 5 && initial.mass1 > 0.5 && initial.mass2 > 0.5)
+        loop(window, dimensions, initial);
+    else
+        return EXIT_FAILURE;
 
     glfwDestroyWindow(window);
     glfwTerminate();
