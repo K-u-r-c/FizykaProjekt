@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <thread>
 #include <utility>
 
 #include "simulation.hpp"
@@ -28,6 +29,8 @@ void read(Args &...args) {
 }
 
 namespace qol {
+
+void runpy() { system("python3 graph.py"); }
 
 void handleKeyInput(GLFWwindow *window, sim::system &ss) {
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))

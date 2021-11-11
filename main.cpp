@@ -28,6 +28,8 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValue
 
     double time = 0;
 
+    qol::saveData(time, st);
+
     glLineWidth(4);
 
     while (!glfwWindowShouldClose(window)) {
@@ -70,7 +72,7 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValue
     }
 }
 
-int main() {
+int main(int argc, char** argv) {
     sim::initialValues initial;
     std::pair<int, int> dimensions{1500, 1500};
 
@@ -86,21 +88,15 @@ int main() {
     glViewport(0, 0, dimensions.first, dimensions.second);
     glClearColor(0.2, 0.2, 0.2, 0);
 
-    print("Press [1] to increase length1");
-    print("Press [2] to decrease length1");
-    print("Press [3] to increase length2");
-    print("Press [4] to decrease length2");
-    print("Press [5] to increase mass1");
-    print("Press [6] to decrease mass1");
-    print("Press [7] to increase mass2");
-    print("Press [8] to decrease mass2");
-    print("Enter [angle1] [angle2] [length1] [length2] [mass1] [mass2]");
-
-    read(initial.theta1, initial.theta2, initial.length1, initial.length2, initial.mass1, initial.mass2);
+    initial.theta1 = std::stod(argv[1]);
+    initial.theta2 = std::stod(argv[2]);
+    initial.length1 = 500;
+    initial.length2 = 500;
+    initial.mass1 = 1;
+    initial.mass2 = 1;
 
     loop(window, dimensions, initial);
 
     glfwDestroyWindow(window);
     glfwTerminate();
-    system("python3 graph.py");
 }
