@@ -1,4 +1,4 @@
-#include "program.hpp"
+#include "simulation.hpp"
 
 #include "qol.hpp"  //Kilka makr dla przyjemniejszego pisania
 

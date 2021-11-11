@@ -1,4 +1,4 @@
-#include "program.hpp"
+#include "simulation.hpp"
 
 int main() {
     Simulation();
