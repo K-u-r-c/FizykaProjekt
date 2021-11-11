@@ -1,6 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <OpenGL/glu.h>
 
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
@@ -26,7 +27,7 @@ void read(Args &...args) {
     (std::cin >> ... >> args);
 }
 
-namespace keys {
+namespace qol {
 
 void handleKeyInput(GLFWwindow *window, sim::system &ss) {
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
@@ -66,4 +67,23 @@ void handleKeyInput(GLFWwindow *window, sim::system &ss) {
         ss.mass.second -= 1;
 }
 
-}  // namespace keys
+void displayUiText(double x, double y, std::string message) {
+    glRasterPos2f(x, y);
+    glColor3d(1., 1., 1.);
+
+    for (int i = 0; i < message.length(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
+    }
+}
+
+void removeDataFile(const char *filename) { remove(filename); }
+
+void saveData(double time, const sim::state st) {
+    std::ofstream myfile("data.txt", std::ios::out | std::ios::app);
+
+    myfile << time << " " << std::fmod(st.theta.first * 180 / M_PI, 360) << " " << std::fmod(st.theta.second * 180 / M_PI, 360) << "\n";
+
+    myfile.close();
+}
+
+}  // namespace qol

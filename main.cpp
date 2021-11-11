@@ -1,15 +1,6 @@
 // clang++ -std=c++20 main.cpp -o program.out -lglfw -framework OpenGL -Wno-deprecated-declarations
 #include "qol.hpp"
 
-void displayUiText(double x, double y, std::string message) {
-    glRasterPos2f(x, y);
-    glColor3d(1., 1., 1.);
-
-    for (int i = 0; i < message.length(); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
-    }
-}
-
 void sphere(const std::pair<double, double>& center, double radius) {
     const int segments = 200;
 
@@ -32,23 +23,26 @@ void sphere(const std::pair<double, double>& center, double radius) {
 }
 
 void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValues& initial) {
-    sim::state st{{initial.theta1, initial.theta2}, {0, 0}};  // theta
-
+    sim::state st{{initial.theta1, initial.theta2}, {0, 0}};
     sim::system ss{{initial.mass1, initial.mass2}, {initial.length1, initial.length2}};
+
+    double time = 0;
 
     glLineWidth(4);
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        displayUiText(-0.98, 0.95, "length1 = " + std::to_string(ss.length.first));
-        displayUiText(-0.4, 0.95, "length2 = " + std::to_string(ss.length.second));
-        displayUiText(-0.98, 0.9, "mass1 = " + std::to_string(ss.mass.first));
-        displayUiText(-0.4, 0.9, "mass2 = " + std::to_string(ss.mass.second));
-        displayUiText(-0.98, 0.85, "theta1 = " + std::to_string(std::fmod((st.theta.first * 180) / M_PI, 360)));
-        displayUiText(-0.4, 0.85, "theta2 = " + std::to_string(std::fmod((st.theta.second * 180) / M_PI, 360)));
-        displayUiText(-0.98, 0.8, "theta_dot1 = " + std::to_string(st.theta_dot.first));
-        displayUiText(-0.4, 0.8, "theta_dot2 = " + std::to_string(st.theta_dot.second));
+        qol::displayUiText(-0.98, 0.95, "length1 = " + std::to_string(ss.length.first));
+        qol::displayUiText(-0.4, 0.95, "length2 = " + std::to_string(ss.length.second));
+        qol::displayUiText(-0.98, 0.9, "mass1 = " + std::to_string(ss.mass.first));
+        qol::displayUiText(-0.4, 0.9, "mass2 = " + std::to_string(ss.mass.second));
+        qol::displayUiText(-0.98, 0.85, "theta1 = " + std::to_string(std::fmod((st.theta.first * 180) / M_PI, 360)));
+        qol::displayUiText(-0.4, 0.85, "theta2 = " + std::to_string(std::fmod((st.theta.second * 180) / M_PI, 360)));
+        qol::displayUiText(-0.98, 0.8, "theta_dot1 = " + std::to_string(st.theta_dot.first));
+        qol::displayUiText(-0.4, 0.8, "theta_dot2 = " + std::to_string(st.theta_dot.second));
+
+        qol::saveData(time, st);
 
         glBegin(GL_LINE_STRIP);
         glColor3d(0.7, 0.7, 0.3);
@@ -62,13 +56,14 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValue
 
         glEnd();
 
-        keys::handleKeyInput(window, ss);
+        qol::handleKeyInput(window, ss);
 
         sphere({0, 0}, 0.02);
         sphere({first_line.first / dimensions.first, -first_line.second / dimensions.second}, 0.02);
         sphere({second_line.first / dimensions.first, -second_line.second / dimensions.second}, 0.02);
 
         st = sim::update(st, ss, 0.2);
+        time += 0.2;
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -78,6 +73,8 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValue
 int main() {
     sim::initialValues initial;
     std::pair<int, int> dimensions{1500, 1500};
+
+    qol::removeDataFile("data.txt");
 
     glfwInit();
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
@@ -105,4 +102,5 @@ int main() {
 
     glfwDestroyWindow(window);
     glfwTerminate();
+    system("python3 graph.py");
 }
