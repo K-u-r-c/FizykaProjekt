@@ -4,7 +4,7 @@
 namespace sim {
 
 double g = 9.81;
-double dt = 0.0005;
+double dt = 0.001;
 
 struct state {
     std::pair<double, double> theta;
@@ -36,23 +36,24 @@ state derive(const state& st, const system& ss) {
     const double delta = st.theta.second - st.theta.first;
     const double mass = ss.mass.first + ss.mass.second;
 
-    double s = sin(delta);
-    double c = cos(delta);
+    double sinus = sin(delta);
+    double cosinus = cos(delta);
 
-    double denominator = mass * ss.length.first - ss.mass.second * ss.length.first * c * c;
+    double denominator = mass * ss.length.first - ss.mass.second * ss.length.first * cosinus * cosinus;
 
     state derivative{{st.theta_dot.first, st.theta_dot.second}, {0, 0}};
-    derivative.theta_dot.first = ss.mass.second * ss.length.first * st.theta_dot.first * st.theta_dot.first * s * c +
-                                 ss.mass.second * g * sin(st.theta.second) * c +
-                                 ss.mass.second * ss.length.second * st.theta_dot.second * st.theta_dot.second * s - mass * g * sin(st.theta.first);
+    derivative.theta_dot.first = ss.mass.second * ss.length.first * st.theta_dot.first * st.theta_dot.first * sinus * cosinus +
+                                 ss.mass.second * g * sin(st.theta.second) * cosinus +
+                                 ss.mass.second * ss.length.second * st.theta_dot.second * st.theta_dot.second * sinus -
+                                 mass * g * sin(st.theta.first);
 
     derivative.theta_dot.first /= denominator;
 
     denominator *= ss.length.second / ss.length.first;
 
-    derivative.theta_dot.second = -ss.mass.second * ss.length.second * st.theta_dot.second * st.theta_dot.second * s * c +
-                                  mass * g * sin(st.theta.first) * c - mass * ss.length.first * st.theta_dot.first * st.theta_dot.first * s -
-                                  mass * g * sin(st.theta.second);
+    derivative.theta_dot.second = -ss.mass.second * ss.length.second * st.theta_dot.second * st.theta_dot.second * sinus * cosinus +
+                                  mass * g * sin(st.theta.first) * cosinus -
+                                  mass * ss.length.first * st.theta_dot.first * st.theta_dot.first * sinus - mass * g * sin(st.theta.second);
 
     derivative.theta_dot.second /= denominator;
 
