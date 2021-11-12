@@ -1,4 +1,4 @@
-// clang++ -std=c++20 main.cpp -o program.out -lglfw -framework OpenGL -Wno-deprecated-declarations
+// clang++ -std=c++20 main.cpp -o program.out -lglfw -framework OpenGL -framework GLUT-Wno-deprecated-declarations
 #include "qol.hpp"
 
 void sphere(const std::pair<double, double>& center, double radius) {

@@ -84,7 +84,7 @@ void removeDataFile(const char *filename) { remove(filename); }
 void saveData(double time, const sim::state st) {
     std::ofstream myfile("data.txt", std::ios::out | std::ios::app);
 
-    myfile << time << " " << std::fmod(st.theta.first * 180 / M_PI, 360) << " " << std::fmod(st.theta.second * 180 / M_PI, 360) << "\n";
+    myfile << time << " " << st.theta.first * 180 / M_PI << " " << st.theta.second * 180 / M_PI << "\n";
 
     myfile.close();
 }
