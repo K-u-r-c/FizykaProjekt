@@ -32,7 +32,7 @@ namespace qol {
 
 void runpy() { system("python3 graph.py"); }
 
-void handleKeyInput(GLFWwindow *window, sim::system &ss) {
+void handleKeyInput(GLFWwindow *window, sim::system &ss, double &timestep) {
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
         ss.length.first += 1;
     else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -68,6 +68,15 @@ void handleKeyInput(GLFWwindow *window, sim::system &ss) {
         ss.mass.second -= 0.05;
     else if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         ss.mass.second -= 1;
+
+    if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
+        timestep += 0.001;
+    else if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        timestep += 0.01;
+    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
+        timestep -= 0.001;
+    else if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        timestep -= 0.01;
 }
 
 void displayUiText(double x, double y, std::string message) {

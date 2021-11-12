@@ -26,7 +26,7 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValue
     sim::state st{{initial.theta1, initial.theta2}, {0, 0}};
     sim::system ss{{initial.mass1, initial.mass2}, {initial.length1, initial.length2}};
 
-    double time = 0;
+    double time = 0, timestep = 0.05;
 
     qol::saveData(time, st);
 
@@ -58,14 +58,14 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValue
 
         glEnd();
 
-        qol::handleKeyInput(window, ss);
+        qol::handleKeyInput(window, ss, timestep);
 
         sphere({0, 0}, 0.02);
         sphere({first_line.first / dimensions.first, -first_line.second / dimensions.second}, 0.02);
         sphere({second_line.first / dimensions.first, -second_line.second / dimensions.second}, 0.02);
 
-        st = sim::update(st, ss, 0.2);
-        time += 0.2;
+        st = sim::update(st, ss, timestep);
+        time += timestep;
 
         glfwSwapBuffers(window);
         glfwPollEvents();
