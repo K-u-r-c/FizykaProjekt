@@ -30,8 +30,6 @@ void read(Args &...args) {
 
 namespace qol {
 
-void runpy() { system("python3 graph.py"); }
-
 void handleKeyInput(GLFWwindow *window, sim::system &ss, double &timestep) {
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
         ss.length.first += 1;
@@ -91,7 +89,7 @@ void displayUiText(double x, double y, std::string message) {
 void removeDataFile(const char *filename) { remove(filename); }
 
 void saveData(double time, const sim::state st) {
-    std::ofstream myfile("data.txt", std::ios::out | std::ios::app);
+    std::ofstream myfile("/Users/jakubkurc/Desktop/Studia/Fizyka-Studia/FizykaProjekt/data.txt", std::ios::out | std::ios::app);
 
     myfile << time << " " << st.theta.first * 180 / M_PI << " " << st.theta.second * 180 / M_PI << "\n";
 

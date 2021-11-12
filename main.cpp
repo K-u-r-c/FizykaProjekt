@@ -1,4 +1,4 @@
-// clang++ -std=c++20 main.cpp -o program.out -lglfw -framework OpenGL -framework GLUT-Wno-deprecated-declarations
+// clang++ -std=c++20 main.cpp -o double_pendulum_simulation.out -lglfw -framework OpenGL -framework GLUT-Wno-deprecated-declarations
 #include "qol.hpp"
 
 void sphere(const std::pair<double, double>& center, double radius) {
@@ -39,8 +39,8 @@ void loop(GLFWwindow* window, std::pair<int, int>& dimensions, sim::initialValue
         qol::displayUiText(-0.4, 0.95, "length2 = " + std::to_string(ss.length.second));
         qol::displayUiText(-0.98, 0.9, "mass1 = " + std::to_string(ss.mass.first));
         qol::displayUiText(-0.4, 0.9, "mass2 = " + std::to_string(ss.mass.second));
-        qol::displayUiText(-0.98, 0.85, "theta1 = " + std::to_string(std::fmod((st.theta.first * 180) / M_PI, 360)));
-        qol::displayUiText(-0.4, 0.85, "theta2 = " + std::to_string(std::fmod((st.theta.second * 180) / M_PI, 360)));
+        qol::displayUiText(-0.98, 0.85, "theta1 = " + std::to_string((st.theta.first * 180) / M_PI));
+        qol::displayUiText(-0.4, 0.85, "theta2 = " + std::to_string((st.theta.second * 180) / M_PI));
         qol::displayUiText(-0.98, 0.8, "theta_dot1 = " + std::to_string(st.theta_dot.first));
         qol::displayUiText(-0.4, 0.8, "theta_dot2 = " + std::to_string(st.theta_dot.second));
 
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
     sim::initialValues initial;
     std::pair<int, int> dimensions{1500, 1500};
 
-    qol::removeDataFile("data.txt");
+    qol::removeDataFile("/Users/jakubkurc/Desktop/Studia/Fizyka-Studia/FizykaProjekt/data.txt");
 
     glfwInit();
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);

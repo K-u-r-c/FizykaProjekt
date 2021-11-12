@@ -89,6 +89,9 @@ state update(const state& st, const system& ss, double time) {
         passed += dt;
     } while (passed < time);
 
+    // ust.theta.first = std::fmod(ust.theta.first, 2 * M_PI);
+    // ust.theta.second = std::fmod(ust.theta.second, 2 * M_PI);
+
     return ust;
 }
 
