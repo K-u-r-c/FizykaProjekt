@@ -14,8 +14,8 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.2, 0.2, 0.2, 0);
 
-        displayValues(pss.length1, pss.length2, pss.mass1, pss.mass2, st.phi1, st.phi2, st.phi_dot1, st.phi_dot2);
-        saveData(t, st.phi1, st.phi2);
+        displayValues(pss.length1, pss.length2, pss.mass1, pss.mass2, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI, st.phi_dot1, st.phi_dot2);
+        saveData(t, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI);
         handleKeyInput(window, pss, timestep);
 
         glLineWidth(4);

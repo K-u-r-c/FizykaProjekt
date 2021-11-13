@@ -2,7 +2,6 @@ import numpy  as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-
 def animate(i):
     data = np.loadtxt('data.txt')
     x = data[:, 0]
