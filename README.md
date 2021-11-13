@@ -1,4 +1,6 @@
 # FizykaProjekt
+Kompilacja: clang++ -std=c++20 *.cpp -o prog.out -lglfw -framework OpenGL -framework GLUT -DGL_SILENCE_DEPRECATION
+
 Źródła wiedzy: 
 - https://scienceworld.wolfram.com/physics/DoublePendulum.html?fbclid=IwAR3qd-w3kfnRFcXJ17DEy_V3ylcLk4kzmJuw2XdTlqecQ_J7MEpTV8C7ZxM
 - http://www.maths.surrey.ac.uk/explore/michaelspages/documentation/Double.pdf?fbclid=IwAR3UTclrkRoN7zd6YOF1dL2QMONLd1vvYdK17ErZSjPMuP3YrUE31PBgICo
