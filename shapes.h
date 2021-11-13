@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
+#elif
+#include <GL/gl.h>
+#endif
 
 #include <cmath>
 
