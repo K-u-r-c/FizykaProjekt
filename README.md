@@ -9,6 +9,8 @@ Kompilacja: clang++ -std=c++20 *.cpp -o prog.out -lglfw -framework OpenGL -frame
 - http://kms.polsl.pl/mi/pelne_29/04_29_60.pdf?fbclid=IwAR3K2Zg_J_AMqatqt-CmgbBvF8VYcHh5oHde4lj039-rG4gB1hCls2aIlpk
 - https://www.geeksforgeeks.org/runge-kutta-4th-order-method-solve-differential-equation/
 - http://www.fizykon.org/fiz_wspolczesna/teoria_chaosu.htm
+- http://www.rose.pwr.wroc.pl/met_numer/MN_notatki.pdf
+- https://youtu.be/5CXhHx56COo
 
 
 https://user-images.githubusercontent.com/58849519/141369808-ada976c9-2c3a-4e8c-a792-70c462b0aec0.mp4
