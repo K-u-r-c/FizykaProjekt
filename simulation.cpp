@@ -9,10 +9,10 @@
 #include "shapes.h"
 #include "ui.h"
 
+double t = 0, timestep = 0.2;
+
 Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, int height) {
     removeDataFile("data.txt");
-
-    double t = 0, timestep = 0.2;
 
     std::vector<std::pair<double, double>> points1, points2;
     bool trail_enabled = true;
@@ -34,15 +34,15 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
         line(line11 / width, -(line12 / height), line21 / width, -(line22) / height);
 
         if (trail_enabled) {
-            if (points1.size() < 100) {
+            if (points1.size() < trailpCount) {
             } else {
                 points1.erase(points1.begin());
                 points2.erase(points2.begin());
             }
             points1.push_back({line11 / width, -(line12 / height)});
             points2.push_back({line21 / width, -(line22) / height});
-            trail(points1, Color(1, 0.1, 0.1, 0));
-            trail(points2, Color(0.1, 0.1, 1, 2));
+            trail(points1, Color(0.38, 0.48, 0.58, 2));
+            trail(points2, Color(0.58, 0.48, 0.38, 0));
         }
 
         circle(0, 0, 0.02);
@@ -63,12 +63,9 @@ Simulation::Simulation(GLFWwindow* window, int width, int height, int number, in
     std::uniform_real_distribution<> rnd(-2 * M_PI, 2 * M_PI);
     std::uniform_real_distribution<> rndcol(0, 1.);
 
-    removeDataFile("data.txt");
-
     status st[number];
     Color color[number];
     psystem pss = {1, 1, width / 2., height / 2.};
-    double t = 0, timestep = 0.2;
 
     if (mode == 0) {
         st[0] = {rnd(generator), rnd(generator), 0, 0};

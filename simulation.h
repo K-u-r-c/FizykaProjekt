@@ -13,7 +13,8 @@ struct psystem {
 class Simulation {
    private:
     double g = 9.81;
-    double dt = 0.001;
+    double dt = 0.05;
+    double trailpCount = 100;
 
    public:
     status derivative(status& stat, psystem& sys);

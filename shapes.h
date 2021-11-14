@@ -2,11 +2,14 @@
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
-#elif
+#else
 #include <GL/gl.h>
 #endif
 
 #include <cmath>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 struct Color {
     Color(double r, double g, double b, int m) : rgb{r, g, b}, m{m} {}
@@ -32,7 +35,7 @@ void circle(double cx, double cy, double radius, Color color = {0.44, 0.565, 0.2
     glEnd();
 }
 
-void trail(std::vector<std::pair<double, double>> points, Color color) {
+void trail(std::vector<std::pair<double, double>> points, Color color = {1, 1, 1, 1}) {
     glLineWidth(2);
     glBegin(GL_LINE_STRIP);
 
