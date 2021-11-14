@@ -58,7 +58,7 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
     }
 }
 
-Simulation::Simulation(GLFWwindow* window, int width, int height, int number) {
+Simulation::Simulation(GLFWwindow* window, int width, int height, int number, int mode) {
     std::mt19937 generator((std::random_device())());
     std::uniform_real_distribution<> rnd(-2 * M_PI, 2 * M_PI);
     std::uniform_real_distribution<> rndcol(0, 1.);
@@ -67,14 +67,28 @@ Simulation::Simulation(GLFWwindow* window, int width, int height, int number) {
 
     status st[number];
     Color color[number];
-    psystem pss = {1, 1, width / 4., height / 4.};
+    psystem pss = {1, 1, width / 2., height / 2.};
     double t = 0, timestep = 0.2;
 
-    for (int i = 0; i < number; i++) {
-        st[i] = {rnd(generator), rnd(generator), 0, 0};
-        color[i].rgb[0] = rndcol(generator);
-        color[i].rgb[1] = rndcol(generator);
-        color[i].rgb[2] = rndcol(generator);
+    if (mode == 0) {
+        st[0] = {rnd(generator), rnd(generator), 0, 0};
+        color[0].rgb[0] = rndcol(generator);
+        color[0].rgb[1] = rndcol(generator);
+        color[0].rgb[2] = rndcol(generator);
+
+        for (int i = 1; i < number; i++) {
+            st[i] = {st[0].phi1 - i * 0.01, st[0].phi2 - i * 0.01, 0, 0};
+            color[i].rgb[0] = rndcol(generator);
+            color[i].rgb[1] = rndcol(generator);
+            color[i].rgb[2] = rndcol(generator);
+        }
+    } else {
+        for (int i = 0; i < number; i++) {
+            st[i] = {rnd(generator), rnd(generator), 0, 0};
+            color[i].rgb[0] = rndcol(generator);
+            color[i].rgb[1] = rndcol(generator);
+            color[i].rgb[2] = rndcol(generator);
+        }
     }
 
     std::vector<std::pair<double, double>> points1, points2;

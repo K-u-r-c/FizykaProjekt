@@ -15,7 +15,7 @@ struct Color {
     int m;
 };
 
-void circle(double cx, double cy, double radius, Color color = {0.3, 0.5, 1, 1}) {
+void circle(double cx, double cy, double radius, Color color = {0.44, 0.565, 0.255, 1}) {
     double x2, y2;
 
     glBegin(GL_TRIANGLE_FAN);
@@ -45,10 +45,10 @@ void trail(std::vector<std::pair<double, double>> points, Color color) {
     glEnd();
 }
 
-void line(double x1, double y1, double x2, double y2) {
+void line(double x1, double y1, double x2, double y2, Color color = {0.40, 0.46, 0.8, 1}) {
     glLineWidth(4);
     glBegin(GL_LINE_STRIP);
-    glColor3d(0.7, 0.5, 0.3);
+    glColor3d(color.rgb[0], color.rgb[1], color.rgb[2]);
 
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);

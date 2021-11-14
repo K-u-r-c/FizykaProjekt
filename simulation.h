@@ -21,6 +21,6 @@ class Simulation {
     status update(status& stat, psystem& sys, double t);
 
     Simulation(GLFWwindow* window, status st, psystem pss, int width, int height);
-    Simulation(GLFWwindow* window, int width, int height, int number);
+    Simulation(GLFWwindow* window, int width, int height, int number, int mode = 0);
     ~Simulation();
 };

@@ -20,6 +20,9 @@ int main(int argc, char** argv) {
     } else if (sim2::ARG_ARGC == argc) {
         auto win = Window(std::stoi(argv[sim2::ARG_WIDTH]), std::stoi(argv[sim2::ARG_HEIGHT]), "Double Pendulum Simulation");
         Simulation(win.getWindow(), std::stoi(argv[sim2::ARG_WIDTH]), std::stoi(argv[sim2::ARG_HEIGHT]), std::stoi(argv[sim2::ARG_NUMBER]));
+    } else if (sim2::ARG_ARGC == argc - 1) {
+        auto win = Window(std::stoi(argv[sim2::ARG_WIDTH]), std::stoi(argv[sim2::ARG_HEIGHT]), "Double Pendulum Simulation");
+        Simulation(win.getWindow(), std::stoi(argv[sim2::ARG_WIDTH]), std::stoi(argv[sim2::ARG_HEIGHT]), std::stoi(argv[sim2::ARG_NUMBER]), 1);
     } else {
         std::cerr << "Wrong input values !";
     }
