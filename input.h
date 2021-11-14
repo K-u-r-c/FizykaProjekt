@@ -2,7 +2,7 @@
 
 #include "simulation.h"
 
-void handleKeyInput(GLFWwindow *window, psystem &pss, double &timestep) {
+void handleKeyInput(GLFWwindow *window, psystem &pss, double &timestep, bool &trail_enabled) {
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
         pss.length1 += 1;
     else if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -47,4 +47,7 @@ void handleKeyInput(GLFWwindow *window, psystem &pss, double &timestep) {
         timestep -= 0.001;
     else if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         timestep -= 0.01;
+
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS && !(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)) trail_enabled = 1;
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS && (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)) trail_enabled = 0;
 }

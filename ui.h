@@ -20,7 +20,7 @@ void clear() {
 #endif
 }
 
-void displayValues(double l1, double l2, double m1, double m2, double p1, double p2, double pd1, double pd2) {
+void displayValues(double l1, double l2, double m1, double m2, double p1, double p2, double pd1, double pd2, double t) {
 #ifdef __APPLE__
     std::string message;
     glColor3d(1., 1., 1.);
@@ -69,6 +69,12 @@ void displayValues(double l1, double l2, double m1, double m2, double p1, double
 
     glRasterPos2d(-0.4, 0.8);
     message = "Phi_dot 2: " + std::to_string(pd2);
+    for (int i = 0; i < message.length(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
+    }
+
+    glRasterPos2d(-0.98, 0.75);
+    message = "Time: " + std::to_string(t);
     for (int i = 0; i < message.length(); i++) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
     }

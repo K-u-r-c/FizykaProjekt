@@ -1,5 +1,8 @@
 #include "simulation.h"
 
+#include <utility>
+#include <vector>
+
 #include "input.h"
 #include "save.h"
 #include "shapes.h"
@@ -8,21 +11,35 @@
 Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, int height) {
     removeDataFile("data.txt");
 
-    double t = 0, timestep = 0.05;
+    double t = 0, timestep = 0.001;
+
+    std::vector<std::pair<double, double>> points1, points2;
+    bool trail_enabled = true;
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
-        glClearColor(0.2, 0.2, 0.2, 0);
+        glClearColor(0.1, 0.1, 0.1, 1);
 
-        displayValues(pss.length1, pss.length2, pss.mass1, pss.mass2, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI, st.phi_dot1, st.phi_dot2);
+        displayValues(pss.length1, pss.length2, pss.mass1, pss.mass2, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI, st.phi_dot1, st.phi_dot2, t);
         saveData(t, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI);
-        handleKeyInput(window, pss, timestep);
-
-        glLineWidth(4);
+        handleKeyInput(window, pss, timestep, trail_enabled);
 
         line(0, 0, pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1) / height));
         line(pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1) / height),
              (pss.length1 * sin(st.phi1) + pss.length2 * sin(st.phi2)) / width, -(pss.length1 * cos(st.phi1) + pss.length2 * cos(st.phi2)) / height);
+
+        if (trail_enabled) {
+            if (points1.size() < 250) {
+            } else {
+                points1.erase(points1.begin());
+                points2.erase(points2.begin());
+            }
+            points1.push_back({pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1) / height)});
+            points2.push_back({(pss.length1 * sin(st.phi1) + pss.length2 * sin(st.phi2)) / width,
+                               -(pss.length1 * cos(st.phi1) + pss.length2 * cos(st.phi2)) / height});
+            trail(points1, Color(1, 0.1, 0.1, 0));
+            trail(points2, Color(0.1, 0.1, 1, 2));
+        }
 
         circle(0, 0, 0.03);
         circle(pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1)) / height, pss.mass1 * 0.01);
