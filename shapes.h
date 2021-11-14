@@ -10,15 +10,16 @@
 
 struct Color {
     Color(double r, double g, double b, int m) : rgb{r, g, b}, m{m} {}
+    Color() {}
     double rgb[3];
     int m;
 };
 
-void circle(double cx, double cy, double radius) {
+void circle(double cx, double cy, double radius, Color color = {0.3, 0.5, 1, 1}) {
     double x2, y2;
 
     glBegin(GL_TRIANGLE_FAN);
-    glColor3d(0.3, 0.5, 1);
+    glColor3d(color.rgb[0], color.rgb[1], color.rgb[2]);
 
     glVertex2d(cx, cy);
 

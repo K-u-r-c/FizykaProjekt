@@ -1,5 +1,6 @@
 #include "simulation.h"
 
+#include <random>
 #include <utility>
 #include <vector>
 
@@ -11,7 +12,7 @@
 Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, int height) {
     removeDataFile("data.txt");
 
-    double t = 0, timestep = 0.4;
+    double t = 0, timestep = 0.2;
 
     std::vector<std::pair<double, double>> points1, points2;
     bool trail_enabled = true;
@@ -24,9 +25,13 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
         saveData(t, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI);
         handleKeyInput(window, pss, timestep, trail_enabled);
 
-        line(0, 0, pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1) / height));
-        line(pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1) / height),
-             (pss.length1 * sin(st.phi1) + pss.length2 * sin(st.phi2)) / width, -(pss.length1 * cos(st.phi1) + pss.length2 * cos(st.phi2)) / height);
+        double line11 = pss.length1 * sin(st.phi1);
+        double line12 = pss.length1 * cos(st.phi1);
+        double line21 = line11 + pss.length2 * sin(st.phi2);
+        double line22 = line12 + pss.length2 * cos(st.phi2);
+
+        line(0, 0, line11 / width, -(line12 / height));
+        line(line11 / width, -(line12 / height), line21 / width, -(line22) / height);
 
         if (trail_enabled) {
             if (points1.size() < 100) {
@@ -34,20 +39,71 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
                 points1.erase(points1.begin());
                 points2.erase(points2.begin());
             }
-            points1.push_back({pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1) / height)});
-            points2.push_back({(pss.length1 * sin(st.phi1) + pss.length2 * sin(st.phi2)) / width,
-                               -(pss.length1 * cos(st.phi1) + pss.length2 * cos(st.phi2)) / height});
+            points1.push_back({line11 / width, -(line12 / height)});
+            points2.push_back({line21 / width, -(line22) / height});
             trail(points1, Color(1, 0.1, 0.1, 0));
             trail(points2, Color(0.1, 0.1, 1, 2));
         }
 
         circle(0, 0, 0.02);
-        circle(pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1)) / height, 0.02);
-        circle((pss.length1 * sin(st.phi1) + pss.length2 * sin(st.phi2)) / width, -(pss.length1 * cos(st.phi1) + pss.length2 * cos(st.phi2)) / height,
-               0.02);
-
+        circle(line11 / width, -(line12) / height, 0.02);
+        circle(line21 / width, -(line22) / height, 0.02);
         // advance system
         st = update(st, pss, timestep);
+
+        t += timestep;
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+}
+
+Simulation::Simulation(GLFWwindow* window, int width, int height, int number) {
+    std::mt19937 generator((std::random_device())());
+    std::uniform_real_distribution<> rnd(-2 * M_PI, 2 * M_PI);
+    std::uniform_real_distribution<> rndcol(0, 1.);
+
+    removeDataFile("data.txt");
+
+    status st[number];
+    Color color[number];
+    psystem pss = {1, 1, width / 4., height / 4.};
+    double t = 0, timestep = 0.2;
+
+    for (int i = 0; i < number; i++) {
+        st[i] = {rnd(generator), rnd(generator), 0, 0};
+        color[i].rgb[0] = rndcol(generator);
+        color[i].rgb[1] = rndcol(generator);
+        color[i].rgb[2] = rndcol(generator);
+    }
+
+    std::vector<std::pair<double, double>> points1, points2;
+    bool line_enabled = true;
+
+    while (!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.1, 0.1, 0.1, 1);
+
+        handleKeyInput(window, pss, timestep, line_enabled);
+
+        circle(0, 0, 0.02);
+        for (int i = 0; i < number; i++) {
+            double line11 = pss.length1 * sin(st[i].phi1);
+            double line12 = pss.length1 * cos(st[i].phi1);
+            double line21 = line11 + pss.length2 * sin(st[i].phi2);
+            double line22 = line12 + pss.length2 * cos(st[i].phi2);
+
+            if (line_enabled) {
+                line(0, 0, line11 / width, -(line12 / height));
+                line(line11 / width, -(line12 / height), line21 / width, -(line22) / height);
+            }
+
+            circle(line11 / width, -(line12) / height, 0.02, color[i]);
+            circle(line21 / width, -(line22) / height, 0.02, color[i]);
+            // advance system
+            st[i] = update(st[i], pss, timestep);
+        }
+
         t += timestep;
 
         glfwSwapBuffers(window);
