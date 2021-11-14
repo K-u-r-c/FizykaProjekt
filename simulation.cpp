@@ -11,7 +11,7 @@
 Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, int height) {
     removeDataFile("data.txt");
 
-    double t = 0, timestep = 0.001;
+    double t = 0, timestep = 0.4;
 
     std::vector<std::pair<double, double>> points1, points2;
     bool trail_enabled = true;
@@ -29,7 +29,7 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
              (pss.length1 * sin(st.phi1) + pss.length2 * sin(st.phi2)) / width, -(pss.length1 * cos(st.phi1) + pss.length2 * cos(st.phi2)) / height);
 
         if (trail_enabled) {
-            if (points1.size() < 250) {
+            if (points1.size() < 100) {
             } else {
                 points1.erase(points1.begin());
                 points2.erase(points2.begin());
@@ -41,10 +41,10 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
             trail(points2, Color(0.1, 0.1, 1, 2));
         }
 
-        circle(0, 0, 0.03);
-        circle(pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1)) / height, pss.mass1 * 0.01);
+        circle(0, 0, 0.02);
+        circle(pss.length1 * sin(st.phi1) / width, -(pss.length1 * cos(st.phi1)) / height, 0.02);
         circle((pss.length1 * sin(st.phi1) + pss.length2 * sin(st.phi2)) / width, -(pss.length1 * cos(st.phi1) + pss.length2 * cos(st.phi2)) / height,
-               pss.mass2 * 0.01);
+               0.02);
 
         // advance system
         st = update(st, pss, timestep);
