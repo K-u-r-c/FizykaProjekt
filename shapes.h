@@ -36,7 +36,6 @@ void circle(double cx, double cy, double radius, Color color = {0.44, 0.565, 0.2
 }
 
 void trail(std::vector<std::pair<double, double>> points, Color color = {1, 1, 1, 1}) {
-    glLineWidth(2);
     glBegin(GL_LINE_STRIP);
 
     for (int i = 0; i < points.size(); i++) {
@@ -49,7 +48,6 @@ void trail(std::vector<std::pair<double, double>> points, Color color = {1, 1, 1
 }
 
 void line(double x1, double y1, double x2, double y2, Color color = {0.40, 0.46, 0.8, 1}) {
-    glLineWidth(4);
     glBegin(GL_LINE_STRIP);
     glColor3d(color.rgb[0], color.rgb[1], color.rgb[2]);
 

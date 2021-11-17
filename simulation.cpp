@@ -20,6 +20,7 @@ Simulation::Simulation(GLFWwindow* window, status st, psystem pss, int width, in
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.1, 0.1, 0.1, 1);
+        glLineWidth(4.0f);
 
         displayValues(pss.length1, pss.length2, pss.mass1, pss.mass2, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI, st.phi_dot1, st.phi_dot2, t);
         saveData(t, st.phi1 * 180 / M_PI, st.phi2 * 180 / M_PI);
@@ -74,7 +75,7 @@ Simulation::Simulation(GLFWwindow* window, int width, int height, int number, in
         color[0].rgb[2] = rndcol(generator);
 
         for (int i = 1; i < number; i++) {
-            st[i] = {st[0].phi1 - i * 0.01, st[0].phi2 - i * 0.01, 0, 0};
+            st[i] = {st[0].phi1 - i * 0.001, st[0].phi2 - i * 0.001, 0, 0};
             color[i].rgb[0] = rndcol(generator);
             color[i].rgb[1] = rndcol(generator);
             color[i].rgb[2] = rndcol(generator);
@@ -125,25 +126,19 @@ Simulation::Simulation(GLFWwindow* window, int width, int height, int number, in
 Simulation::~Simulation() {}
 
 status Simulation::derivative(status& stat, psystem& sys) {
-    double delta = stat.phi2 - stat.phi1;
-    double mass = sys.mass1 + sys.mass2;
-
-    double sinus = sin(delta);
-    double cosinus = cos(delta);
-
-    double denominator = mass * sys.length1 - sys.mass2 * sys.length1 * cosinus * cosinus;
-
+    // https://web.mit.edu/jorloff/www/chaosTalk/double-pendulum/double-pendulum-en.html
+    // Wzory z tej strony
     status der{stat.phi_dot1, stat.phi_dot2, 0, 0};
-    der.phi_dot1 = sys.mass2 * sys.length1 * stat.phi_dot1 * stat.phi_dot1 * sinus * cosinus + sys.mass2 * g * sin(stat.phi2) * cosinus +
-                   sys.mass2 * sys.length2 * stat.phi_dot2 * stat.phi_dot2 * sinus - mass * g * sin(stat.phi1);
 
-    der.phi_dot1 /= denominator;
-    denominator *= sys.length2 / sys.length1;
+    der.phi_dot1 = -g * (2 * sys.mass1 + sys.mass2) * sin(stat.phi1) - sys.mass2 * g * sin(stat.phi1 - 2 * stat.phi2) -
+                   2 * sin(stat.phi1 - stat.phi2) * sys.mass2 *
+                       (stat.phi_dot2 * stat.phi_dot2 * sys.length2 + stat.phi_dot1 * stat.phi_dot1 * sys.length1 * cos(stat.phi1 - stat.phi2));
+    der.phi_dot1 /= sys.length1 * (2 * sys.mass1 + sys.mass2 - sys.mass2 * cos(2 * stat.phi1 - 2 * stat.phi2));
 
-    der.phi_dot2 = -sys.mass2 * sys.length2 * stat.phi_dot2 * stat.phi_dot2 * sinus * cosinus + mass * g * sin(stat.phi1) * cosinus -
-                   mass * sys.length1 * stat.phi_dot1 * stat.phi_dot1 * sinus - mass * g * sin(stat.phi2);
-
-    der.phi_dot2 /= denominator;
+    der.phi_dot2 = 2 * sin(stat.phi1 - stat.phi2) *
+                   (stat.phi_dot1 * stat.phi_dot1 * sys.length1 * (sys.mass1 + sys.mass2) + g * (sys.mass1 + sys.mass2) * cos(stat.phi1) +
+                    stat.phi_dot2 * stat.phi_dot2 * sys.length2 * sys.mass2 * cos(stat.phi1 - stat.phi2));
+    der.phi_dot2 /= sys.length2 * (2 * sys.mass1 + sys.mass2 - sys.mass2 * cos(2 * stat.phi1 - 2 * stat.phi2));
 
     return der;
 }
