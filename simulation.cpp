@@ -1,7 +1,6 @@
 #include "simulation.h"
 
 #include <random>
-#include <utility>
 #include <vector>
 
 #include "input.h"
